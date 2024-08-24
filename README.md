@@ -15,7 +15,6 @@ Muonroi is a Visual Studio Code extension that automatically moves `using` state
 ## Requirements
 
 - Visual Studio Code version 1.92.0 or later.
-- A valid C# project structure with a `Properties` directory.
 
 ## Extension Settings
 
