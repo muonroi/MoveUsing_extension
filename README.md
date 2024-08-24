@@ -9,8 +9,7 @@ Muonroi is a Visual Studio Code extension that automatically moves `using` state
 - Notify you upon successful relocation.
 
 ## How to use
-
-![](https://github.com/muonroi/MoveUsing_extension/blob/master/images/demo.gif)
+![demo](https://github.com/user-attachments/assets/7ca8ba39-8b3d-4bac-b353-1937b6b318cc)
 
 ## Requirements
 
