@@ -8,6 +8,10 @@ Muonroi is a Visual Studio Code extension that automatically moves `using` state
 - Create a new `globalUsing.cs` file if it does not already exist.
 - Notify you upon successful relocation.
 
+## How to use
+
+![](https://github.com/MoveUsing_extension/images/demo.gif)
+
 ## Requirements
 
 - Visual Studio Code version 1.92.0 or later.
