@@ -25,9 +25,9 @@ There are currently no known issues.
 
 ## Release Notes
 
-### 0.0.1
+### 0.0.8
 
-- Initial release with the functionality to move `using` statements to `globalUsing.cs`.
+- Add icons for extensions
 
 ---
 
