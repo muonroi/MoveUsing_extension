@@ -3,7 +3,7 @@
   "publisher": "muonroi",
   "displayName": "move_using",
   "description": "auto move using to globalUsing file",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.92.0"
   },
