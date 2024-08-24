@@ -5,7 +5,7 @@ import * as path from 'path';
 export function activate(context: vscode.ExtensionContext) {
 	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
 		if (document.languageId === 'csharp') {
-			moveUsings(document);
+			handleUsings(document);
 		}
 	});
 
@@ -17,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		if (editor.document.languageId === 'csharp') {
-			moveUsings(editor.document);
+			handleUsings(editor.document);
 		} else {
 			vscode.window.showErrorMessage('This command is only available for C# files.');
 		}
@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 }
 
-function moveUsings(document: vscode.TextDocument) {
+function handleUsings(document: vscode.TextDocument) {
 	const documentText = document.getText();
 	const usingRegex = /^using .*;/gm;
 	const usings = documentText.match(usingRegex);
@@ -46,33 +46,42 @@ function moveUsings(document: vscode.TextDocument) {
 
 		const projectDir = path.dirname(csprojFilePath);
 		const globalUsingPath = path.join(projectDir, 'globalUsing.cs');
+
 		if (!fs.existsSync(globalUsingPath)) {
 			fs.writeFileSync(globalUsingPath, '', { encoding: 'utf-8' });
 		}
 
 		let globalUsingContent = fs.readFileSync(globalUsingPath, { encoding: 'utf-8' });
-		let newContent = documentText.replace(usingRegex, '');
-
-		newContent = newContent.replace(/^\s*\n*(namespace\s)/, '$1');
+		let newContent = documentText;
+		let hasChanges = false;
 
 		usings.forEach(using => {
 			const globalUsingStatement = `global ${using}`;
-			if (!globalUsingContent.includes(globalUsingStatement)) {
+			if (globalUsingContent.includes(globalUsingStatement)) {
+				newContent = newContent.replace(using, '');
+				hasChanges = true;
+			} else {
 				globalUsingContent += globalUsingStatement + '\n';
+				hasChanges = true;
 			}
 		});
 
-		fs.writeFileSync(globalUsingPath, globalUsingContent, { encoding: 'utf-8' });
+		if (hasChanges) {
+			fs.writeFileSync(globalUsingPath, globalUsingContent, { encoding: 'utf-8' });
 
-		const edit = new vscode.WorkspaceEdit();
-		const entireRange = new vscode.Range(
-			document.positionAt(0),
-			document.positionAt(documentText.length)
-		);
-		edit.replace(document.uri, entireRange, newContent);
-		vscode.workspace.applyEdit(edit);
+			newContent = newContent.replace(usingRegex, '');
+			newContent = newContent.replace(/^\s*\n*(namespace\s)/, '$1');
 
-		vscode.window.showInformationMessage('Moved usings to globalUsing.cs');
+			const edit = new vscode.WorkspaceEdit();
+			const entireRange = new vscode.Range(
+				document.positionAt(0),
+				document.positionAt(documentText.length)
+			);
+			edit.replace(document.uri, entireRange, newContent);
+			vscode.workspace.applyEdit(edit);
+
+			vscode.window.showInformationMessage('Usings have been moved or removed as necessary.');
+		}
 	}
 }
 
@@ -97,5 +106,5 @@ function findCsprojFile(dir: string): string | null {
 }
 
 export function deactivate() {
-	vscode.window.showInformationMessage('Moved usings deactivate');
+	vscode.window.showInformationMessage('Extension has been deactivated');
 }

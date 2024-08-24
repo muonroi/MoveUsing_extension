@@ -25,9 +25,9 @@ There are currently no known issues.
 
 ## Release Notes
 
-### 0.0.8
+### 1.0.0
 
-- Add icons for extensions
+- Complete base extension
 
 ---
 
